@@ -72,16 +72,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         tapToStart.fontColor = UIColor.blackColor()
         tapToStart.fontSize = 22.0
         addChild(tapToStart)
-        tapToStart.runAction(blinkAnimation())
+        //tapToStart.runAction(blinkAnimation())
     }
     
     func addPointsLabels(){
         let pointsLabel = MLPointsLabel(num: 0)
         pointsLabel.position = CGPointMake(20.0, view!.frame.size.height - 35)
+        pointsLabel.name = "pointsLabel"
         addChild(pointsLabel)
         
         let highscoreLabel = MLPointsLabel(num: 0)
         highscoreLabel.position = CGPointMake(view!.frame.size.width-20, view!.frame.size.height - 35)
+        highscoreLabel.name = "highscoreLabel"
         addChild(highscoreLabel)
         
         let highscoreTextLabel = SKLabelNode(text: "High")
@@ -125,7 +127,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         GameOverLabel.position.y = view!.center.y + 40
         GameOverLabel.fontSize = 22.0
         addChild(GameOverLabel)
-        GameOverLabel.runAction(blinkAnimation())
+        //GameOverLabel.runAction(blinkAnimation())
         
     }
     
@@ -148,7 +150,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
    
     override func update(currentTime: CFTimeInterval) {
-        /* Called before each frame is rendered */
+        
+        if wallGenerator.wallTrackers.count > 0 {
+            /* Called before each frame is rendered */
+            let wall = wallGenerator.wallTrackers[0] as MLWall
+            
+            let wallLocation = wallGenerator.convertPoint(wall.position, toNode: self)
+            if wallLocation.x < hero.position.x {
+                wallGenerator.wallTrackers.removeAtIndex(0)
+                let pointsLabel = childNodeWithName("pointsLabel") as! MLPointsLabel
+                pointsLabel.increment()
+            }
+        }
     }
     
     // touching detenction
@@ -168,3 +181,4 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
 }
+
