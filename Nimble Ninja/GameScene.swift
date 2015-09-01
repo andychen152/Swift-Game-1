@@ -17,6 +17,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var isStarted = false
     var isGameOver = false
+
     
     override func didMoveToView(view: SKView) {
         backgroundColor = UIColor(red: 135.0/255.0, green: 206.0/255.0, blue: 250.0/255.0, alpha: 1.0)
@@ -35,6 +36,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addStartLabel()
         addPointsLabels()
         addPhysicsWorld()
+        loadHighScore()
+        
     }
     
     func addMovingGround(){
@@ -73,6 +76,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         tapToStart.fontSize = 22.0
         addChild(tapToStart)
         //tapToStart.runAction(blinkAnimation())
+        
+        
     }
     
     func addPointsLabels(){
@@ -96,6 +101,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func addPhysicsWorld(){
          physicsWorld.contactDelegate = self
+    }
+    
+    func loadHighScore(){
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        let highscoreLabel = childNodeWithName("highscoreLabel") as! MLPointsLabel
+        highscoreLabel.setTo(defaults.integerForKey("highscore"))
     }
     
     func start(){
@@ -129,6 +141,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(GameOverLabel)
         //GameOverLabel.runAction(blinkAnimation())
         
+        
+        // save current
+        let pointsLabel = childNodeWithName("pointsLabel") as! MLPointsLabel
+        let highscoreLabel = childNodeWithName("highscoreLabel") as! MLPointsLabel
+        
+        if highscoreLabel.number < pointsLabel.number{
+            highscoreLabel.setTo(pointsLabel.number)
+            
+            let defaults = NSUserDefaults.standardUserDefaults()
+            defaults.setInteger(highscoreLabel.number, forKey: "highscore")
+        }
+        
+        
+        
     }
     
     func restart(){
@@ -160,8 +186,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 wallGenerator.wallTrackers.removeAtIndex(0)
                 let pointsLabel = childNodeWithName("pointsLabel") as! MLPointsLabel
                 pointsLabel.increment()
+                }
             }
-        }
+
     }
     
     // touching detenction

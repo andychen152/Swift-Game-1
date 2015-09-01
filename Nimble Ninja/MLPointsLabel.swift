@@ -34,4 +34,10 @@ class MLPointsLabel: SKLabelNode {
         text = "\(number)"
     }
     
+    func setTo(number: Int){
+        self.number = number
+        text = "\(self.number)"
+        
+    }
+    
 }
