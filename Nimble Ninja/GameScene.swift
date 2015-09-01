@@ -15,6 +15,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var cloudGenrator: MLCloudGenerator!
     var wallGenerator: MLWallGenerator!
     
+    
     var isStarted = false
     var isGameOver = false
 
@@ -118,7 +119,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         hero.stop()
         hero.startRunning()
         movingGround.start()
-        wallGenerator.startGeneratingWallsEvery(0.1575)   // 1.0 second
+        wallGenerator.startGeneratingWallsEvery(0.1575)   // 0.1575 second
         
     }
     
@@ -145,16 +146,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // save current
         let pointsLabel = childNodeWithName("pointsLabel") as! MLPointsLabel
         let highscoreLabel = childNodeWithName("highscoreLabel") as! MLPointsLabel
-        
-        if highscoreLabel.number < pointsLabel.number{
-            highscoreLabel.setTo(pointsLabel.number)
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            defaults.setInteger(highscoreLabel.number, forKey: "highscore")
-        }
-        
-        
-        
     }
     
     func restart(){
@@ -186,6 +177,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 wallGenerator.wallTrackers.removeAtIndex(0)
                 let pointsLabel = childNodeWithName("pointsLabel") as! MLPointsLabel
                 pointsLabel.increment()
+                let highscoreLabel = childNodeWithName("highscoreLabel") as! MLPointsLabel
+                if highscoreLabel.number < pointsLabel.number {
+                    highscoreLabel.increment()
+                    let defaults = NSUserDefaults.standardUserDefaults()
+                    defaults.setInteger(highscoreLabel.number, forKey: "highscore")
+                    }
                 }
             }
 
